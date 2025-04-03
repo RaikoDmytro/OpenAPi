@@ -1,0 +1,3323 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Trackabi Public API",
+    "description": "This documentation provides a guide to using our API, designed to help developers integrate, manage, and scale their applications with ease. Whether you're building a new product or enhancing an existing system, this API offers secure and flexible endpoints for accessing core features and data. Inside, you'll find clear instructions, sample requests, and best practices to support smooth integration and efficient development. To use the API, an API key is required. It can be generated in your personal settings under the API Keys section.",
+    "contact": {
+      "name": "API Support Team",
+      "email": "support@trackabi.com"
+    },
+    "license": {
+      "name": "Commercial",
+      "url": "https://trackabi.com"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.trackabi.com",
+      "description": "Production Server"
+    },
+    {
+      "url": "https://api.trackabi.net",
+      "description": "Staging Server"
+    }
+  ],
+  "paths": {
+    "/api/v1/companies/{company_alias}/clients": {
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Get company clients",
+        "description": "Retrieves a paginated list of clients for a specified company account. The resulting list depends on the access permissions of the user who owns the API key used.",
+        "operationId": "getCompanyClients",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/company_alias"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/page_size"
+          },
+          {
+            "$ref": "#/components/parameters/reverse"
+          },
+          {
+            "name": "order_by",
+            "in": "query",
+            "description": "Sorts results by a specified field. Some data may be unavailable due to API key access restrictions (e.g., 'currency', 'hourly_rate').",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name",
+                "short_name",
+                "contact_person",
+                "address",
+                "email",
+                "phone",
+                "notes",
+                "currency",
+                "hourly_rate",
+                "cost_hourly_rate"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "description": "Client ID",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "Client name",
+                        "type": "string"
+                      },
+                      "logo": {
+                        "description": "Client logo URL",
+                        "type": "string",
+                        "format": "url"
+                      },
+                      "short_name": {
+                        "description": "Client short name",
+                        "type": "string"
+                      },
+                      "contact_person": {
+                        "description": "Contact person",
+                        "type": "string"
+                      },
+                      "address": {
+                        "description": "Client address",
+                        "type": "string"
+                      },
+                      "email": {
+                        "description": "Client email",
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "phone": {
+                        "description": "Client phone number",
+                        "type": "string"
+                      },
+                      "notes": {
+                        "description": "Additional notes",
+                        "type": "string"
+                      },
+                      "currency": {
+                        "description": "Client currency",
+                        "type": "string"
+                      },
+                      "hourly_rate": {
+                        "description": "Hourly rate",
+                        "type": "number"
+                      },
+                      "cost_hourly_rate": {
+                        "description": "Cost hourly rate",
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/clients/{client_id}": {
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Get client details",
+        "description": "Retrieves the details of a specific client by ID.",
+        "operationId": "getClientDetails",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/client_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The client ID",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "description": "The client name",
+                      "type": "string"
+                    },
+                    "logo": {
+                      "description": "The client logo URL (nullable)",
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "short_name": {
+                      "description": "The short name of the client",
+                      "type": "string"
+                    },
+                    "contact_person": {
+                      "description": "The contact person for the client",
+                      "type": "string"
+                    },
+                    "address": {
+                      "description": "The client's address",
+                      "type": "string"
+                    },
+                    "email": {
+                      "description": "The client's email address",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "phone": {
+                      "description": "The client's phone number",
+                      "type": "string"
+                    },
+                    "notes": {
+                      "description": "Additional notes about the client",
+                      "type": "string"
+                    },
+                    "currency": {
+                      "description": "The currency used by the client (access-restricted)",
+                      "type": "string"
+                    },
+                    "hourly_rate": {
+                      "description": "The client's hourly rate (access-restricted)",
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "cost_hourly_rate": {
+                      "description": "The client's cost hourly rate (access-restricted)",
+                      "type": "number",
+                      "format": "float"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Update client details",
+        "description": "Updates details of a specific client by ID.",
+        "operationId": "updateClientDetails",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/client_id"
+          }
+        ],
+        "requestBody": {
+          "description": "Client fields to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The client's name.",
+                    "type": "string",
+                    "example": "Client Example Name"
+                  },
+                  "short_name": {
+                    "description": "Short name of the client",
+                    "type": "string",
+                    "example": "ShortName",
+                    "nullable": true
+                  },
+                  "contact_person": {
+                    "description": "Contact person",
+                    "type": "string",
+                    "example": "John Doe",
+                    "nullable": true
+                  },
+                  "address": {
+                    "description": "Address of the client",
+                    "type": "string",
+                    "example": "123 Street Name, City",
+                    "nullable": true
+                  },
+                  "email": {
+                    "description": "Client's email",
+                    "type": "string",
+                    "format": "email",
+                    "example": "client@example.com",
+                    "nullable": true
+                  },
+                  "phone": {
+                    "description": "Client's phone number",
+                    "type": "string",
+                    "example": "+123456789",
+                    "nullable": true
+                  },
+                  "notes": {
+                    "description": "Additional notes",
+                    "type": "string",
+                    "example": "Important client",
+                    "nullable": true
+                  },
+                  "currency": {
+                    "description": "Client's currency (access-restricted)",
+                    "type": "string",
+                    "example": "USD",
+                    "nullable": true
+                  },
+                  "hourly_rate": {
+                    "description": "Hourly rate (access-restricted)",
+                    "type": "number",
+                    "format": "float",
+                    "example": 50,
+                    "nullable": true
+                  },
+                  "cost_hourly_rate": {
+                    "description": "Cost hourly rate (access-restricted)",
+                    "type": "number",
+                    "format": "float",
+                    "example": 45.5,
+                    "nullable": true
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The client ID",
+                      "type": "integer",
+                      "example": 4
+                    },
+                    "name": {
+                      "description": "The client's name",
+                      "type": "string",
+                      "example": "Client Example Name"
+                    },
+                    "logo": {
+                      "description": "The client logo URL (nullable)",
+                      "type": "string",
+                      "example": null,
+                      "nullable": true
+                    },
+                    "short_name": {
+                      "description": "Short name of the client",
+                      "type": "string",
+                      "example": "",
+                      "nullable": true
+                    },
+                    "contact_person": {
+                      "description": "Contact person",
+                      "type": "string",
+                      "example": "Client contact Person",
+                      "nullable": true
+                    },
+                    "address": {
+                      "description": "Client's address",
+                      "type": "string",
+                      "example": "13 West Lake Crescent USA",
+                      "nullable": true
+                    },
+                    "email": {
+                      "description": "Client's email",
+                      "type": "string",
+                      "format": "email",
+                      "example": "example@example.com",
+                      "nullable": true
+                    },
+                    "phone": {
+                      "description": "Client's phone number",
+                      "type": "string",
+                      "example": "+1234567890",
+                      "nullable": true
+                    },
+                    "notes": {
+                      "description": "Additional notes",
+                      "type": "string",
+                      "example": "",
+                      "nullable": true
+                    },
+                    "currency": {
+                      "description": "Client's currency",
+                      "type": "string",
+                      "example": "USD",
+                      "nullable": true
+                    },
+                    "hourly_rate": {
+                      "description": "Hourly rate",
+                      "type": "number",
+                      "format": "float",
+                      "example": 7.4,
+                      "nullable": true
+                    },
+                    "cost_hourly_rate": {
+                      "description": "Cost hourly rate",
+                      "type": "number",
+                      "format": "float",
+                      "example": 7,
+                      "nullable": true
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Delete a client",
+        "description": "Deletes a specified client from the organization.",
+        "operationId": "deleteClient",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/client_id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/clients": {
+      "post": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Create a new client",
+        "description": "Creates a new client in the organization.",
+        "operationId": "createClient",
+        "requestBody": {
+          "description": "Client details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The client's name.",
+                    "type": "string",
+                    "example": "New Client"
+                  },
+                  "short_name": {
+                    "description": "Short name of the client.",
+                    "type": "string",
+                    "example": "ShortName",
+                    "nullable": true
+                  },
+                  "contact_person": {
+                    "description": "Contact person.",
+                    "type": "string",
+                    "example": "John Doe",
+                    "nullable": true
+                  },
+                  "address": {
+                    "description": "Address of the client.",
+                    "type": "string",
+                    "example": "123 Street Name, City",
+                    "nullable": true
+                  },
+                  "email": {
+                    "description": "Client's email.",
+                    "type": "string",
+                    "format": "email",
+                    "example": "client@example.com",
+                    "nullable": true
+                  },
+                  "phone": {
+                    "description": "Client's phone number.",
+                    "type": "string",
+                    "example": "+123456789",
+                    "nullable": true
+                  },
+                  "notes": {
+                    "description": "Additional notes about the client.",
+                    "type": "string",
+                    "example": "Important client",
+                    "nullable": true
+                  },
+                  "currency": {
+                    "description": "Client's currency (access-restricted).",
+                    "type": "string",
+                    "example": "USD",
+                    "nullable": true
+                  },
+                  "hourly_rate": {
+                    "description": "Hourly rate (access-restricted).",
+                    "type": "number",
+                    "format": "float",
+                    "example": 50,
+                    "nullable": true
+                  },
+                  "cost_hourly_rate": {
+                    "description": "Cost hourly rate (access-restricted).",
+                    "type": "number",
+                    "format": "float",
+                    "example": 45.5,
+                    "nullable": true
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Client successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the created client.",
+                      "type": "integer",
+                      "example": 17
+                    },
+                    "name": {
+                      "description": "The name of the client.",
+                      "type": "string",
+                      "example": "New Client"
+                    },
+                    "logo": {
+                      "description": "The logo of the client.",
+                      "type": "string",
+                      "example": null,
+                      "nullable": true
+                    },
+                    "short_name": {
+                      "description": "Short name of the client.",
+                      "type": "string",
+                      "example": "",
+                      "nullable": true
+                    },
+                    "contact_person": {
+                      "description": "Contact person.",
+                      "type": "string",
+                      "example": "",
+                      "nullable": true
+                    },
+                    "address": {
+                      "description": "Address of the client.",
+                      "type": "string",
+                      "example": "",
+                      "nullable": true
+                    },
+                    "email": {
+                      "description": "Email of the client.",
+                      "type": "string",
+                      "format": "email",
+                      "example": "",
+                      "nullable": true
+                    },
+                    "phone": {
+                      "description": "Client's phone number.",
+                      "type": "string",
+                      "example": "",
+                      "nullable": true
+                    },
+                    "notes": {
+                      "description": "Additional notes.",
+                      "type": "string",
+                      "example": "",
+                      "nullable": true
+                    },
+                    "currency": {
+                      "description": "Client's currency.",
+                      "type": "string",
+                      "example": "",
+                      "nullable": true
+                    },
+                    "hourly_rate": {
+                      "description": "Hourly rate.",
+                      "type": "number",
+                      "format": "float",
+                      "example": null,
+                      "nullable": true
+                    },
+                    "cost_hourly_rate": {
+                      "description": "Cost hourly rate.",
+                      "type": "number",
+                      "format": "float",
+                      "example": null,
+                      "nullable": true
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/company": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Get company attributes",
+        "description": "Retrieves the company details.",
+        "operationId": "getCompanies",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "name": {
+                      "description": "The company name.",
+                      "type": "string",
+                      "example": "Example Company"
+                    },
+                    "alias": {
+                      "description": "The company alias.",
+                      "type": "string",
+                      "example": "example-co"
+                    },
+                    "address": {
+                      "description": "The company address.",
+                      "type": "string",
+                      "example": "123 Example Street"
+                    },
+                    "phone": {
+                      "description": "The company phone number.",
+                      "type": "string",
+                      "example": "+1234567890"
+                    },
+                    "email": {
+                      "description": "The company email address.",
+                      "type": "string",
+                      "format": "email",
+                      "example": "contact@example.com"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/companies/{company_alias}/time-types": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Get active time types in a company",
+        "description": "Retrieves a company's time types",
+        "operationId": "getCompanyTimeTypes",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/company_alias"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "description": "ID of the time type",
+                        "type": "integer",
+                        "example": "1"
+                      },
+                      "name": {
+                        "description": "Name of the time type",
+                        "type": "string",
+                        "example": "Overtime"
+                      },
+                      "short_name": {
+                        "description": "Short name of the time type",
+                        "type": "string",
+                        "example": "O"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get company projects",
+        "description": "Retrieves a paginated projects list",
+        "operationId": "1115b9ccd7bf83c5f89cb0d42cabc12d",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/page_size"
+          },
+          {
+            "$ref": "#/components/parameters/reverse"
+          },
+          {
+            "name": "order_by",
+            "in": "query",
+            "description": "Sort results by a specified field. Some data may be unavailable due to API key restrictions ('hourly_rate', 'cost_hourly_rate', 'currency').",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name",
+                "short_name",
+                "description",
+                "start_date",
+                "end_date",
+                "hourly_rate",
+                "cost_hourly_rate",
+                "currency",
+                "estimate_units",
+                "not_billable"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "description": "Project Id",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "Project name",
+                        "type": "string"
+                      },
+                      "short_name": {
+                        "description": "Short project name",
+                        "type": "string"
+                      },
+                      "description": {
+                        "description": "Project description",
+                        "type": "string"
+                      },
+                      "start_date": {
+                        "description": "Project start date",
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "end_date": {
+                        "description": "Project end date",
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "hourly_rate": {
+                        "description": "Project hourly rate (access-restricted)",
+                        "type": "number",
+                        "format": "float"
+                      },
+                      "cost_hourly_rate": {
+                        "description": "Project cost hourly rate (access-restricted)",
+                        "type": "number",
+                        "format": "float"
+                      },
+                      "currency": {
+                        "description": "Project currency (access-restricted)",
+                        "type": "string"
+                      },
+                      "estimate_units": {
+                        "description": "Project estimate units",
+                        "type": "string"
+                      },
+                      "not_billable": {
+                        "description": "Project is billable or not",
+                        "type": "integer"
+                      },
+                      "client": {
+                        "description": "Linked client information",
+                        "type": "object"
+                      },
+                      "assigned_users": {
+                        "description": "Array of assigned users",
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "teams": {
+                        "description": "Array of the assigned teams",
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_id}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get project details",
+        "description": "Retrieves the details of a specific project by ID.",
+        "operationId": "aa559c40ec2b288776f65ccf968df63a",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The project ID",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "description": "The project name",
+                      "type": "string"
+                    },
+                    "short_name": {
+                      "description": "The short name of the project",
+                      "type": "string"
+                    },
+                    "client": {
+                      "description": "Linked client information",
+                      "type": "object"
+                    },
+                    "description": {
+                      "description": "The project description",
+                      "type": "string"
+                    },
+                    "start_date": {
+                      "description": "Start date of the project",
+                      "type": "string"
+                    },
+                    "end_date": {
+                      "description": "End date of the project",
+                      "type": "string"
+                    },
+                    "hourly_rate": {
+                      "description": "Hourly rate (access-restricted)",
+                      "type": "number"
+                    },
+                    "cost_hourly_rate": {
+                      "description": "Cost hourly rate (access-restricted)"
+                    },
+                    "currency": {
+                      "description": "Project currency rate (access-restricted)"
+                    },
+                    "estimate_units": {
+                      "description": "Estimate units of the project",
+                      "type": "string"
+                    },
+                    "not_billable": {
+                      "description": "Flag. It's mean is project billable or not",
+                      "type": "integer"
+                    },
+                    "assigned_users": {
+                      "description": "Array of assigned members",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "description": "User ID",
+                            "type": "integer"
+                          },
+                          "user_id": {
+                            "description": "User ID",
+                            "type": "integer"
+                          },
+                          "first_name": {
+                            "description": "User's first name",
+                            "type": "string"
+                          },
+                          "last_name": {
+                            "description": "User's last name",
+                            "type": "string"
+                          },
+                          "phone": {
+                            "description": "User's phone",
+                            "type": "string"
+                          },
+                          "email": {
+                            "description": "User's email",
+                            "type": "string"
+                          },
+                          "avatar": {
+                            "description": "URL of user's avatar",
+                            "type": "string"
+                          },
+                          "personal_email": {
+                            "description": "User's personal email",
+                            "type": "string"
+                          },
+                          "address": {
+                            "description": "User's address",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "teams": {
+                      "description": "Array of assigned teams",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "description": "Team ID",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "Team name",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Delete a project",
+        "description": "Deletes a specified project from the organization.",
+        "operationId": "deleteProject",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project_id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/projects/{project_id}": {
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Update project by ID",
+        "operationId": "c06422ac2bdcdbcbcb988fdf75b79fd8",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project_id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name",
+                  "short_name",
+                  "currency"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "New project"
+                  },
+                  "short_name": {
+                    "type": "string",
+                    "example": "NP"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Project Description"
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-01-01"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-12-12"
+                  },
+                  "hourly_rate": {
+                    "description": "Cost hourly rate (access-restricted)",
+                    "type": "number",
+                    "format": "float",
+                    "example": 1
+                  },
+                  "cost_hourly_rate": {
+                    "description": "Project currency rate (access-restricted)",
+                    "type": "number",
+                    "format": "float",
+                    "example": 1
+                  },
+                  "currency": {
+                    "description": "Estimate units of the project",
+                    "type": "string",
+                    "example": "USD"
+                  },
+                  "estimate_units": {
+                    "description": "2 means hours, 1 means days",
+                    "type": "integer",
+                    "example": 2
+                  },
+                  "not_billable": {
+                    "description": "1 or 0",
+                    "type": "integer",
+                    "example": 0
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The project ID",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "description": "The project name",
+                      "type": "string"
+                    },
+                    "short_name": {
+                      "description": "The short name of the project",
+                      "type": "string"
+                    },
+                    "client": {
+                      "description": "Linked client information",
+                      "type": "object"
+                    },
+                    "description": {
+                      "description": "The project description",
+                      "type": "string"
+                    },
+                    "start_date": {
+                      "description": "Start date of the project",
+                      "type": "string"
+                    },
+                    "end_date": {
+                      "description": "End date of the project",
+                      "type": "string"
+                    },
+                    "hourly_rate": {
+                      "description": "Hourly rate (access-restricted)",
+                      "type": "number"
+                    },
+                    "cost_hourly_rate": {
+                      "description": "Cost hourly rate (access-restricted)"
+                    },
+                    "currency": {
+                      "description": "Project currency rate (access-restricted)"
+                    },
+                    "estimate_units": {
+                      "description": "Estimate units of the project",
+                      "type": "string"
+                    },
+                    "not_billable": {
+                      "description": "Flag. It's mean is project billable or not",
+                      "type": "integer"
+                    },
+                    "assigned_users": {
+                      "description": "Array of assigned members",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "description": "User ID",
+                            "type": "integer"
+                          },
+                          "user_id": {
+                            "description": "User ID",
+                            "type": "integer"
+                          },
+                          "first_name": {
+                            "description": "User's first name",
+                            "type": "string"
+                          },
+                          "last_name": {
+                            "description": "User's last name",
+                            "type": "string"
+                          },
+                          "phone": {
+                            "description": "User's phone",
+                            "type": "string"
+                          },
+                          "email": {
+                            "description": "User's email",
+                            "type": "string"
+                          },
+                          "avatar": {
+                            "description": "URL of user's avatar",
+                            "type": "string"
+                          },
+                          "personal_email": {
+                            "description": "User's personal email",
+                            "type": "string"
+                          },
+                          "address": {
+                            "description": "User's address",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "teams": {
+                      "description": "Array of assigned teams",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "description": "Team ID",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "Team name",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/projects": {
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Create a new project",
+        "description": "Create a new project in the organization.",
+        "operationId": "createProject",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name",
+                  "short_name",
+                  "currency"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "New project"
+                  },
+                  "short_name": {
+                    "type": "string",
+                    "example": "NP"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Project Description"
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-01-01"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-12-12"
+                  },
+                  "hourly_rate": {
+                    "description": "Cost hourly rate (access-restricted)",
+                    "type": "number",
+                    "format": "float",
+                    "example": 1
+                  },
+                  "cost_hourly_rate": {
+                    "description": "Project currency rate (access-restricted)",
+                    "type": "number",
+                    "format": "float",
+                    "example": 1
+                  },
+                  "currency": {
+                    "description": "Estimate units of the project",
+                    "type": "string",
+                    "example": "USD"
+                  },
+                  "estimate_units": {
+                    "description": "2 means hours, 1 means days",
+                    "type": "integer",
+                    "example": 2
+                  },
+                  "not_billable": {
+                    "description": "1 or 0",
+                    "type": "integer",
+                    "example": 0
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The project ID",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "description": "The project name",
+                      "type": "string"
+                    },
+                    "short_name": {
+                      "description": "The short name of the project",
+                      "type": "string"
+                    },
+                    "client": {
+                      "description": "Linked client information",
+                      "type": "object"
+                    },
+                    "description": {
+                      "description": "The project description",
+                      "type": "string"
+                    },
+                    "start_date": {
+                      "description": "Start date of the project",
+                      "type": "string"
+                    },
+                    "end_date": {
+                      "description": "End date of the project",
+                      "type": "string"
+                    },
+                    "hourly_rate": {
+                      "description": "Hourly rate (access-restricted)",
+                      "type": "number"
+                    },
+                    "cost_hourly_rate": {
+                      "description": "Cost hourly rate (access-restricted)"
+                    },
+                    "currency": {
+                      "description": "Project currency rate (access-restricted)"
+                    },
+                    "estimate_units": {
+                      "description": "Estimate units of the project",
+                      "type": "string"
+                    },
+                    "not_billable": {
+                      "description": "Flag. It's mean is project billable or not",
+                      "type": "integer"
+                    },
+                    "assigned_users": {
+                      "description": "Array of assigned members",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "description": "User ID",
+                            "type": "integer"
+                          },
+                          "user_id": {
+                            "description": "User ID",
+                            "type": "integer"
+                          },
+                          "first_name": {
+                            "description": "User's first name",
+                            "type": "string"
+                          },
+                          "last_name": {
+                            "description": "User's last name",
+                            "type": "string"
+                          },
+                          "phone": {
+                            "description": "User's phone",
+                            "type": "string"
+                          },
+                          "email": {
+                            "description": "User's email",
+                            "type": "string"
+                          },
+                          "avatar": {
+                            "description": "URL of user's avatar",
+                            "type": "string"
+                          },
+                          "personal_email": {
+                            "description": "User's personal email",
+                            "type": "string"
+                          },
+                          "address": {
+                            "description": "User's address",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "teams": {
+                      "description": "Array of assigned teams",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "description": "Team ID",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "Team name",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_id}/tasks": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Get project tasks",
+        "description": "Retrieves a paginated list of tasks for a specified project",
+        "operationId": "getProjectTasks",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project_id"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/page_size"
+          },
+          {
+            "$ref": "#/components/parameters/reverse"
+          },
+          {
+            "name": "order_by",
+            "in": "query",
+            "description": "Sort results by a specified field.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name",
+                "project_id",
+                "description",
+                "parent_task_id",
+                "start_date",
+                "end_date",
+                "not_billable",
+                "estimated_days",
+                "estimated_hours"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "description": "Task ID",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "Task name",
+                        "type": "string"
+                      },
+                      "project_id": {
+                        "description": "Project ID",
+                        "type": "string"
+                      },
+                      "description": {
+                        "description": "Description of the task",
+                        "type": "string"
+                      },
+                      "subtasks_count": {
+                        "description": "Count of subtasks",
+                        "type": "string"
+                      },
+                      "parent_task_id": {
+                        "description": "Parent Task ID",
+                        "type": "string"
+                      },
+                      "estimated_hours": {
+                        "description": "Estimated Hours. Depending on the estimated project units",
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "estimated_days": {
+                        "description": "Estimated Days. Depending on the estimated project units",
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "start_date": {
+                        "description": "Task start date",
+                        "type": "string"
+                      },
+                      "end_date": {
+                        "description": "Task end date",
+                        "type": "string"
+                      },
+                      "not_billable": {
+                        "description": "Is task billable",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tasks": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Get tasks",
+        "description": "Retrieves a paginated list of tasks",
+        "operationId": "getTasks",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/page_size"
+          },
+          {
+            "$ref": "#/components/parameters/reverse"
+          },
+          {
+            "name": "order_by",
+            "in": "query",
+            "description": "Sort results by a specified field.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name",
+                "project_id",
+                "description",
+                "parent_task_id",
+                "start_date",
+                "end_date",
+                "not_billable",
+                "estimated_days",
+                "estimated_hours"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "description": "Task ID",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "Task name",
+                        "type": "string"
+                      },
+                      "project_id": {
+                        "description": "Project ID",
+                        "type": "string"
+                      },
+                      "description": {
+                        "description": "Description of the task",
+                        "type": "string"
+                      },
+                      "subtasks_count": {
+                        "description": "Count of subtasks",
+                        "type": "string"
+                      },
+                      "parent_task_id": {
+                        "description": "Parent Task ID",
+                        "type": "string"
+                      },
+                      "estimated_hours": {
+                        "description": "Estimated Hours. Depending on the estimated project units",
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "estimated_days": {
+                        "description": "Estimated Days. Depending on the estimated project units",
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "start_date": {
+                        "description": "Task start date",
+                        "type": "string"
+                      },
+                      "end_date": {
+                        "description": "Task end date",
+                        "type": "string"
+                      },
+                      "not_billable": {
+                        "description": "Is task billable",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tasks/{task_id}": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Get task",
+        "description": "Retrieves tasks for specified ID",
+        "operationId": "getTask",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "Task ID",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "description": "Task name",
+                      "type": "string"
+                    },
+                    "project_id": {
+                      "description": "Project ID",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Description of the task",
+                      "type": "string"
+                    },
+                    "subtasks_count": {
+                      "description": "Count of subtasks",
+                      "type": "string"
+                    },
+                    "parent_task_id": {
+                      "description": "Parent Task ID",
+                      "type": "string"
+                    },
+                    "estimated_hours": {
+                      "description": "Estimated Hours. Depending on the estimated project units",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "estimated_days": {
+                      "description": "Estimated Days. Depending on the estimated project units",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "start_date": {
+                      "description": "Task start date",
+                      "type": "string"
+                    },
+                    "end_date": {
+                      "description": "Task end date",
+                      "type": "string"
+                    },
+                    "not_billable": {
+                      "description": "Is task billable",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Update task details",
+        "description": "Updates details of a specific task by ID.",
+        "operationId": "updateTaskDetails",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task_id"
+          }
+        ],
+        "requestBody": {
+          "description": "Task fields to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "Task name",
+                    "type": "string",
+                    "example": "Feed a cat"
+                  },
+                  "description": {
+                    "description": "Task description",
+                    "type": "string",
+                    "example": "Task description",
+                    "nullable": true
+                  },
+                  "parent_task_id": {
+                    "description": "Parent task",
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "estimated_hours": {
+                    "description": "Estimated Hours. Depending on the estimated project units",
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "estimated_days": {
+                    "description": "Estimated Days. Depending on the estimated project units",
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "start_date": {
+                    "description": "Task start date",
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-01-01",
+                    "nullable": true
+                  },
+                  "end_date": {
+                    "description": "Task end date",
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-02-01",
+                    "nullable": true
+                  },
+                  "not_billable": {
+                    "description": "Flag means is task billable",
+                    "type": "integer",
+                    "example": "1"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "Task ID",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "description": "Task name",
+                      "type": "string"
+                    },
+                    "project_id": {
+                      "description": "Project ID",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Description of the task",
+                      "type": "string"
+                    },
+                    "subtasks_count": {
+                      "description": "Count of subtasks",
+                      "type": "string"
+                    },
+                    "parent_task_id": {
+                      "description": "Parent Task ID",
+                      "type": "string"
+                    },
+                    "estimated_hours": {
+                      "description": "Estimated Hours. Depending on the estimated project units",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "estimated_days": {
+                      "description": "Estimated Days. Depending on the estimated project units",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "start_date": {
+                      "description": "Task start date",
+                      "type": "string"
+                    },
+                    "end_date": {
+                      "description": "Task end date",
+                      "type": "string"
+                    },
+                    "not_billable": {
+                      "description": "Is task billable",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Delete a task",
+        "description": "Deletes a specified task",
+        "operationId": "deleteTask",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/task_id"
+          },
+          {
+            "name": "removeSubtasks",
+            "in": "query",
+            "description": "Delete task with subtasks",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tasks/{task_id}/subtasks": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Get subtasks of task",
+        "description": "Retrieves a paginated list of subtasks for a specified task.",
+        "operationId": "getSubtasks",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/page_size"
+          },
+          {
+            "$ref": "#/components/parameters/reverse"
+          },
+          {
+            "name": "order_by",
+            "in": "query",
+            "description": "Sort results by a specified field.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name",
+                "project_id",
+                "description",
+                "parent_task_id",
+                "start_date",
+                "end_date",
+                "not_billable",
+                "estimated_days",
+                "estimated_hours"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/task_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "description": "Task ID",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "Task name",
+                        "type": "string"
+                      },
+                      "project_id": {
+                        "description": "Project ID",
+                        "type": "string"
+                      },
+                      "description": {
+                        "description": "Description of the task",
+                        "type": "string"
+                      },
+                      "subtasks_count": {
+                        "description": "Count of subtasks",
+                        "type": "string"
+                      },
+                      "parent_task_id": {
+                        "description": "Parent Task ID",
+                        "type": "string"
+                      },
+                      "estimated_hours": {
+                        "description": "Estimated Hours. Depending on the estimated project units",
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "estimated_days": {
+                        "description": "Estimated Days. Depending on the estimated project units",
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "start_date": {
+                        "description": "Task start date",
+                        "type": "string"
+                      },
+                      "end_date": {
+                        "description": "Task end date",
+                        "type": "string"
+                      },
+                      "not_billable": {
+                        "description": "Is task billable",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tasks/{project_id}/subtasks": {
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Create a new task",
+        "description": "Create a new task",
+        "operationId": "createTask",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/project_id"
+          }
+        ],
+        "requestBody": {
+          "description": "Task fields to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "Task name",
+                    "type": "string",
+                    "example": "Feed a cat"
+                  },
+                  "description": {
+                    "description": "Task description",
+                    "type": "string",
+                    "example": "Task description",
+                    "nullable": true
+                  },
+                  "parent_task_id": {
+                    "description": "Parent task",
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "estimated_hours": {
+                    "description": "Estimated Hours. Depending on the estimated project units",
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "estimated_days": {
+                    "description": "Estimated Days. Depending on the estimated project units",
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "start_date": {
+                    "description": "Task start date",
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-01-01",
+                    "nullable": true
+                  },
+                  "end_date": {
+                    "description": "Task end date",
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-02-01",
+                    "nullable": true
+                  },
+                  "not_billable": {
+                    "description": "Flag means is task billable. O or 1",
+                    "type": "integer",
+                    "example": "1"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "Task ID",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "description": "Task name",
+                      "type": "string"
+                    },
+                    "project_id": {
+                      "description": "Project ID",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Description of the task",
+                      "type": "string"
+                    },
+                    "subtasks_count": {
+                      "description": "Count of subtasks",
+                      "type": "string"
+                    },
+                    "parent_task_id": {
+                      "description": "Parent Task ID",
+                      "type": "string"
+                    },
+                    "estimated_hours": {
+                      "description": "Estimated Hours. Depending on the estimated project units",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "estimated_days": {
+                      "description": "Estimated Days. Depending on the estimated project units",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "start_date": {
+                      "description": "Task start date",
+                      "type": "string"
+                    },
+                    "end_date": {
+                      "description": "Task end date",
+                      "type": "string"
+                    },
+                    "not_billable": {
+                      "description": "Is task billable",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/timesheet": {
+      "get": {
+        "tags": [
+          "Timesheet"
+        ],
+        "summary": "Get company timesheet",
+        "description": "Retrieves a paginated timesheet. According to the user access level, the timesheet may change",
+        "operationId": "getTimesheet",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/page_size"
+          },
+          {
+            "$ref": "#/components/parameters/reverse"
+          },
+          {
+            "name": "order_by",
+            "in": "query",
+            "description": "Sort results by a specified field. Some data may be unavailable due to API key access restrictions (e.g., 'id', 'client_id', etc.).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "member_id",
+                "client_id",
+                "project_id",
+                "task_id",
+                "date_logged",
+                "logged_time",
+                "description",
+                "billable",
+                "time_type"
+              ]
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "The start date for filtering records. Only records with dates equal to or later than this date will be included. The date format must be 'YYYY-MM-DD'.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "The end date for filtering records. Only records with dates equal to or earlier than this date will be included. The date format must be 'YYYY-MM-DD'.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "clientId",
+            "in": "query",
+            "description": "Used to filter records belonging to a specific client by ID. Cannot be used together with clientName",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "сlientName",
+            "in": "query",
+            "description": "Used to filter records belonging to a specific client by name. Cannot be used together with clientId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "Used to filter records belonging to a specific project by ID. Cannot be used together with projectName",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "projectName",
+            "in": "query",
+            "description": "Used to filter records belonging to a specific project by name. Cannot be used together with projectId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Used to filter records belonging to a specific member by email. Cannot be used together with memberId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "memberId",
+            "in": "query",
+            "description": "Used to filter records belonging to a specific member by ID. Cannot be used together with email",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "description": "Client ID",
+                        "type": "integer"
+                      },
+                      "member": {
+                        "description": "Linked member information",
+                        "type": "object"
+                      },
+                      "client": {
+                        "description": "Linked client information",
+                        "type": "object"
+                      },
+                      "project": {
+                        "description": "Linked project information",
+                        "type": "object"
+                      },
+                      "task": {
+                        "description": "Linked task information",
+                        "type": "object"
+                      },
+                      "date_logged": {
+                        "description": "Date logged",
+                        "type": "string"
+                      },
+                      "description": {
+                        "description": "Work perfomed of timesheet entry",
+                        "type": "string"
+                      },
+                      "logged_time": {
+                        "description": "Total logged time",
+                        "type": "string"
+                      },
+                      "billable": {
+                        "description": "Total billable time",
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "start_time": {
+                        "description": "Start time",
+                        "type": "string"
+                      },
+                      "end_time": {
+                        "description": "End time",
+                        "type": "string"
+                      },
+                      "timer_started_at": {
+                        "description": "Timer started at. Timer is running when this field is not null",
+                        "type": "string"
+                      },
+                      "time_type": {
+                        "description": "Time time",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Timesheet"
+        ],
+        "summary": "Create a new time entry",
+        "description": "Create a new time entry. Supports both single object and array of objects as input.",
+        "operationId": "createTimesheetEntry",
+        "requestBody": {
+          "description": "Client fields to update (can be a single object or an array of objects)",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "member_id": {
+                        "description": "Member ID (Do not use together with email)",
+                        "type": "string",
+                        "example": "12"
+                      },
+                      "email": {
+                        "description": "Member email (Do not use together with member_id)",
+                        "type": "string",
+                        "example": "member@example.com"
+                      },
+                      "client_id": {
+                        "description": "Client ID (Do not use together with client_name)",
+                        "type": "string",
+                        "example": "35"
+                      },
+                      "client_name": {
+                        "description": "Client name (Do not use together with client_id)",
+                        "type": "string",
+                        "example": "Client Name"
+                      },
+                      "project_id": {
+                        "description": "Project ID (Do not use together with project_name)",
+                        "type": "string",
+                        "example": "12"
+                      },
+                      "project_name": {
+                        "description": "Project name (Do not use together with project_id)",
+                        "type": "string",
+                        "example": "Project Name"
+                      },
+                      "task_id": {
+                        "description": "Task ID (Do not use together with task_name)",
+                        "type": "string",
+                        "example": "35"
+                      },
+                      "task_name": {
+                        "description": "Task name (Do not use together with task_id)",
+                        "type": "string",
+                        "example": "Task Name"
+                      },
+                      "date_logged": {
+                        "description": "Date logged of time entry",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-03-03"
+                      },
+                      "description": {
+                        "description": "Description of work",
+                        "type": "string",
+                        "example": "Google meet..."
+                      },
+                      "logged_time": {
+                        "description": "Logged time duration",
+                        "type": "string",
+                        "format": "time",
+                        "example": "01:35:00"
+                      },
+                      "billable": {
+                        "description": "Billable time duration",
+                        "type": "string",
+                        "format": "time",
+                        "example": "01:35:00"
+                      },
+                      "time_type": {
+                        "description": "Time type (e.g., Normal, Overtime)",
+                        "type": "string",
+                        "example": "Normal"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "properties": {
+                        "member_id": {
+                          "description": "Member ID (Do not use together with email)",
+                          "type": "string",
+                          "example": "12"
+                        },
+                        "email": {
+                          "description": "Member email (Do not use together with member_id)",
+                          "type": "string",
+                          "example": "member@example.com"
+                        },
+                        "client_id": {
+                          "description": "Client ID (Do not use together with client_name)",
+                          "type": "string",
+                          "example": "35"
+                        },
+                        "client_name": {
+                          "description": "Client name (Do not use together with client_id)",
+                          "type": "string",
+                          "example": "Client Name"
+                        },
+                        "project_id": {
+                          "description": "Project ID (Do not use together with project_name)",
+                          "type": "string",
+                          "example": "12"
+                        },
+                        "project_name": {
+                          "description": "Project name (Do not use together with project_id)",
+                          "type": "string",
+                          "example": "Project Name"
+                        },
+                        "task_id": {
+                          "description": "Task ID (Do not use together with task_name)",
+                          "type": "string",
+                          "example": "35"
+                        },
+                        "task_name": {
+                          "description": "Task name (Do not use together with task_id)",
+                          "type": "string",
+                          "example": "Task Name"
+                        },
+                        "date_logged": {
+                          "description": "Date logged of time entry",
+                          "type": "string",
+                          "format": "date",
+                          "example": "2025-03-03"
+                        },
+                        "description": {
+                          "description": "Description of work",
+                          "type": "string",
+                          "example": "Google meet..."
+                        },
+                        "logged_time": {
+                          "description": "Logged time duration",
+                          "type": "string",
+                          "format": "time",
+                          "example": "01:35:00"
+                        },
+                        "billable": {
+                          "description": "Billable time duration",
+                          "type": "string",
+                          "format": "time",
+                          "example": "01:35:00"
+                        },
+                        "time_type": {
+                          "description": "Time type (e.g., Normal, Overtime)",
+                          "type": "string",
+                          "example": "Normal"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "Client ID",
+                      "type": "integer"
+                    },
+                    "member": {
+                      "description": "Linked member information",
+                      "type": "object"
+                    },
+                    "client": {
+                      "description": "Linked client information",
+                      "type": "object"
+                    },
+                    "project": {
+                      "description": "Linked project information",
+                      "type": "object"
+                    },
+                    "task": {
+                      "description": "Linked task information",
+                      "type": "object"
+                    },
+                    "date_logged": {
+                      "description": "Date logged",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Work performed in timesheet entry",
+                      "type": "string"
+                    },
+                    "logged_time": {
+                      "description": "Total logged time",
+                      "type": "string"
+                    },
+                    "billable": {
+                      "description": "Total billable time",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "start_time": {
+                      "description": "Start time",
+                      "type": "string"
+                    },
+                    "end_time": {
+                      "description": "End time",
+                      "type": "string"
+                    },
+                    "timer_started_at": {
+                      "description": "Timer started at. The timer runs when this field is not null",
+                      "type": "string"
+                    },
+                    "time_type": {
+                      "description": "Time type",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/timesheet/{timesheet_id}": {
+      "get": {
+        "tags": [
+          "Timesheet"
+        ],
+        "summary": "Get a time entry",
+        "description": "Retrieves a timesheet entry.",
+        "operationId": "getTimesheetEntry",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/timesheet_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "Client ID",
+                      "type": "integer"
+                    },
+                    "member": {
+                      "description": "Linked member information",
+                      "type": "object"
+                    },
+                    "client": {
+                      "description": "Linked client information",
+                      "type": "object"
+                    },
+                    "project": {
+                      "description": "Linked project information",
+                      "type": "object"
+                    },
+                    "task": {
+                      "description": "Linked task information",
+                      "type": "object"
+                    },
+                    "date_logged": {
+                      "description": "Date logged",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Work perfomed of timesheet entry",
+                      "type": "string"
+                    },
+                    "logged_time": {
+                      "description": "Total logged time",
+                      "type": "string"
+                    },
+                    "billable": {
+                      "description": "Total billable time",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "start_time": {
+                      "description": "Start time",
+                      "type": "string"
+                    },
+                    "end_time": {
+                      "description": "End time",
+                      "type": "string"
+                    },
+                    "timer_started_at": {
+                      "description": "Timer started at. The timer runs when this field dont null",
+                      "type": "string"
+                    },
+                    "time_type": {
+                      "description": "Time time",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Timesheet"
+        ],
+        "summary": "Edit a time entry",
+        "description": "Edit time entry",
+        "operationId": "editTimesheetEntry",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/timesheet_id"
+          }
+        ],
+        "requestBody": {
+          "description": "Client fields to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "member_id": {
+                    "description": "Member ID (Do not use together with email)",
+                    "type": "string",
+                    "example": "12"
+                  },
+                  "email": {
+                    "description": "Member email (Do not use together with member_id)",
+                    "type": "string",
+                    "example": "member@example.com"
+                  },
+                  "client_id": {
+                    "description": "Client ID (Do not use together with client_name)",
+                    "type": "string",
+                    "example": "35"
+                  },
+                  "client_name": {
+                    "description": "Client name (Do not use together with client_id)",
+                    "type": "string",
+                    "example": "Client Name"
+                  },
+                  "project_id": {
+                    "description": "Project ID (Do not use together with project_name)",
+                    "type": "string",
+                    "example": "12"
+                  },
+                  "project_name": {
+                    "description": "Project name (Do not use together with project_id)",
+                    "type": "string",
+                    "example": "Project Name"
+                  },
+                  "task_id": {
+                    "description": "Task ID (Do not use together with task_name)",
+                    "type": "string",
+                    "example": "35"
+                  },
+                  "task_name": {
+                    "description": "Task name (Do not use together with task_id)",
+                    "type": "string",
+                    "example": "Task Name"
+                  },
+                  "date_logged": {
+                    "description": "Date logged of time entry",
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-03-03"
+                  },
+                  "description": {
+                    "description": "Description of work",
+                    "type": "string",
+                    "example": "Google meet...",
+                    "nullable": false
+                  },
+                  "logged_time": {
+                    "description": "",
+                    "type": "string",
+                    "format": "time",
+                    "example": "01:35:00",
+                    "nullable": false
+                  },
+                  "billable": {
+                    "description": "",
+                    "type": "string",
+                    "format": "time",
+                    "example": "01:35:00",
+                    "nullable": false
+                  },
+                  "time_type": {
+                    "description": "Name of time time",
+                    "type": "string",
+                    "example": "Normal (Overtime, etc. ...)"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "Client ID",
+                      "type": "integer"
+                    },
+                    "member": {
+                      "description": "Linked member information",
+                      "type": "object"
+                    },
+                    "client": {
+                      "description": "Linked client information",
+                      "type": "object"
+                    },
+                    "project": {
+                      "description": "Linked project information",
+                      "type": "object"
+                    },
+                    "task": {
+                      "description": "Linked task information",
+                      "type": "object"
+                    },
+                    "date_logged": {
+                      "description": "Date logged",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Work perfomed of timesheet entry",
+                      "type": "string"
+                    },
+                    "logged_time": {
+                      "description": "Total logged time",
+                      "type": "string"
+                    },
+                    "billable": {
+                      "description": "Total billable time",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "start_time": {
+                      "description": "Start time",
+                      "type": "string"
+                    },
+                    "end_time": {
+                      "description": "End time",
+                      "type": "string"
+                    },
+                    "timer_started_at": {
+                      "description": "Timer started at. The timer runs when this field dont null",
+                      "type": "string"
+                    },
+                    "time_type": {
+                      "description": "Time time",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Timesheet"
+        ],
+        "summary": "Delete a time entry",
+        "description": "Deletes a specified time entry.",
+        "operationId": "deleteTimeEntry",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/timesheet_id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/EntryNotFound"
+          },
+          "403": {
+            "$ref": "#/components/responses/AccessDenied"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "EntryNotFound": {
+        "description": "Entry Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "The error message",
+                  "type": "string"
+                },
+                "code": {
+                  "description": "The trackabi error code",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Validation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "The error message",
+                  "type": "string"
+                },
+                "code": {
+                  "description": "The trackabi error code",
+                  "type": "string"
+                },
+                "validationErrors": {
+                  "description": "Object where keys are attribute names and values are error messages",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              },
+              "type": "object"
+            },
+            "example": {
+              "error": "Validation error",
+              "code": "CODE_002",
+              "validationErrors": {
+                "some_attribute": "Unknown attribute",
+                "name": "This field is required"
+              }
+            }
+          }
+        }
+      },
+      "AccessDenied": {
+        "description": "Access denied",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "The error message",
+                  "type": "string"
+                },
+                "code": {
+                  "description": "The trackabi error code",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "error": {
+                  "description": "The error message",
+                  "type": "string"
+                },
+                "code": {
+                  "description": "The trackabi error code",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        }
+      },
+      "415": {
+        "description": "Invalid Content-Type. This API only accepts requests with 'application/json'.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Invalid Content-Type. This API only accepts requests with 'application/json'."
+                },
+                "code": {
+                  "type": "string",
+                  "example": "GLBL_000"
+                }
+              },
+              "type": "object"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized request due to invalid credentials.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Your request could not be completed due to invalid credentials"
+                },
+                "code": {
+                  "type": "string",
+                  "example": "GLBL_006"
+                }
+              },
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "page": {
+        "name": "page",
+        "in": "query",
+        "description": "The page number. Must be an integer greater than 0.",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "page_size": {
+        "name": "page_size",
+        "in": "query",
+        "description": "The number of items per page. Must be an integer greater than 0.",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "reverse": {
+        "name": "reverse",
+        "in": "query",
+        "description": "If set to 1, sorts the result in descending order.",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ]
+        }
+      },
+      "company_alias": {
+        "name": "company_alias",
+        "in": "path",
+        "description": "The the company alias (subdomain of the account).",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "client_id": {
+        "name": "client_id",
+        "in": "path",
+        "description": "The unique ID of the client.",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "task_id": {
+        "name": "task_id",
+        "in": "path",
+        "description": "The unique ID of the task.",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "project_id": {
+        "name": "project_id",
+        "in": "path",
+        "description": "The unique ID of the project.",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "timesheet_id": {
+        "name": "timesheet_id",
+        "in": "path",
+        "description": "The unique ID of the time entry.",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "headers": {
+      "Content-Type": {
+        "description": "Content type for all requests",
+        "schema": {
+          "type": "string",
+          "example": "application/json"
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "description": "Bearer {{bearerToken}}. Example: 'Bearer your-access-token'",
+        "bearerFormat": "apiKey",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Clients",
+      "description": "Clients"
+    },
+    {
+      "name": "Companies",
+      "description": "Companies"
+    },
+    {
+      "name": "Projects",
+      "description": "Projects"
+    },
+    {
+      "name": "Tasks",
+      "description": "Tasks"
+    },
+    {
+      "name": "Timesheet",
+      "description": "Timesheet"
+    }
+  ]
+}
