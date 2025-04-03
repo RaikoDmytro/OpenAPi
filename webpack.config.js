@@ -24,7 +24,7 @@ module.exports = {
     ],
   },
   output: {
-    path: path.resolve(__dirname, 'dist'), // Physical folder for built files
+    path: path.resolve(__dirname, 'public'), // Physical folder for built files
     filename: 'bundle.js', // Output bundle file
     publicPath: '/', // Webpack Dev Middleware serves bundles "in-memory" at this path
   },

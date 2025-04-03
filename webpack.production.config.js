@@ -10,7 +10,7 @@ module.exports = {
 
   entry: './src/index.js', // Starting point of your application
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'public'),
     filename: '[name].[contenthash].js', // Add content hash for cache-busting
     publicPath: '/', // Serve files from root
   },
