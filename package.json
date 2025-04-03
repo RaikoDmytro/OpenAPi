@@ -8,6 +8,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "calendar": "^0.1.0",
     "classnames": "^2.2.6",
+    "clean-webpack-plugin": "^4.0.0",
     "core-js": "^3.38.1",
     "credit-card-type": "^8.2.0",
     "dotenv": "^16.4.7",
@@ -146,7 +147,7 @@
     "lint:fix": "eslint ./frontend/web/src --fix",
     "gulp": "gulp",
     "emulate-fcm-message": "node frontend/web/src/components/firebase-messaging/fcm-test-message.js",
-    "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --mode production --env",
+    "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --mode production --env production",
     "start": "npm run dev"
   },
   "eslintConfig": {

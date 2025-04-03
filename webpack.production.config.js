@@ -25,7 +25,7 @@ module.exports = {
         },
       },
       {
-        test: /\.scss$/, // For SASS/SCSS files
+        test: /\.s?css$/, // For SASS/SCSS files
         use: [
           MiniCssExtractPlugin.loader, // Extract CSS into separate files
           'css-loader', // Translate CSS into CommonJS
