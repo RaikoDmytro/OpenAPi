@@ -80,7 +80,7 @@ module.exports = {
       inject: 'body', // Automatically inject script tags at the bottom
     }),
     // new LodashModuleReplacementPlugin(),
-    // new webpack.optimize.AggressiveMergingPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         {
