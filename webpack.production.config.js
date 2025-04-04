@@ -10,7 +10,27 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   mode: 'production', // Set production mode for optimizations
 
-  entry: './src/index.js', // Starting point of your application
+  entry: {// Starting point of your application
+    front: ['core-js/stable', 'regenerator-runtime/runtime', './src/index.js'],
+  },
+
+  optimization: {
+    minimize: true, // Enable minification
+    minimizer: [
+      new TerserWebpackPlugin({ // Minify JavaScript
+        terserOptions: {
+          compress: {
+            drop_console: true, // Strip console logs
+          },
+        },
+      }),
+      new CssMinimizerPlugin(), // Minify CSS
+    ],
+    splitChunks: {
+      chunks: 'all', // Split vendor code and app code
+    },
+  },
+
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash].js', // Add content hash for cache-busting
@@ -67,22 +87,7 @@ module.exports = {
     new CleanWebpackPlugin(), // Clean up the /dist folder
   ],
 
-  optimization: {
-    minimize: true, // Enable minification
-    minimizer: [
-      new TerserWebpackPlugin({ // Minify JavaScript
-        terserOptions: {
-          compress: {
-            drop_console: true, // Strip console logs
-          },
-        },
-      }),
-      new CssMinimizerPlugin(), // Minify CSS
-    ],
-    splitChunks: {
-      chunks: 'all', // Split vendor code and app code
-    },
-  },
+
 
   performance: {
     hints: false, // Disable performance hints for production
