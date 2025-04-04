@@ -79,7 +79,7 @@ module.exports = {
       template: './public/index.html', // Use this as the template
       inject: 'body', // Automatically inject script tags at the bottom
     }),
-    new LodashModuleReplacementPlugin(),
+    // new LodashModuleReplacementPlugin(),
     // new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin({
       patterns: [
