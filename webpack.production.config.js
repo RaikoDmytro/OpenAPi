@@ -6,6 +6,8 @@ const { DefinePlugin } = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // Add this plugin
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 module.exports = {
   mode: 'production', // Set production mode for optimizations
@@ -69,10 +71,16 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/locale$/,
+      contextRegExp: /moment$/,
+    }),
     new HtmlWebpackPlugin({
       template: './public/index.html', // Use this as the template
       inject: 'body', // Automatically inject script tags at the bottom
     }),
+    new LodashModuleReplacementPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -89,6 +97,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css', // Cache-busting for CSS files
+      ignoreOrder: true,
     }),
     new CleanWebpackPlugin(), // Clean up the /dist folder
   ],
