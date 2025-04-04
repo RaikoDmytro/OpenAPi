@@ -26,9 +26,15 @@ module.exports = {
       }),
       new CssMinimizerPlugin(), // Minify CSS
     ],
-    splitChunks: {
-      chunks: 'all', // Split vendor code and app code
-    },
+      splitChunks: {
+          cacheGroups: {
+              commons: {
+                  name: 'common',
+                  chunks: 'initial',
+                  minChunks: 2,
+              },
+          },
+      },
   },
 
   output: {
