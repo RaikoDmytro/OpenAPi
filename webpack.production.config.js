@@ -4,13 +4,15 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin'); // Add this plugin
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'production', // Set production mode for optimizations
 
   entry: './src/index.js', // Starting point of your application
   output: {
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash].js', // Add content hash for cache-busting
     publicPath: '/', // Serve files from root
   },
@@ -41,6 +43,21 @@ module.exports = {
   },
 
   plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/index.html', // Use this as the template
+      inject: 'body', // Automatically inject script tags at the bottom
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'public'), // Source: your `public` directory
+          to: path.resolve(__dirname, 'dist'), // Destination: Webpack's `dist` directory
+          globOptions: {
+            ignore: ['**/index.html'], // Optionally ignore if you process index.html separately
+          },
+        },
+      ],
+    }),
     new DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'), // Ensure React uses production mode
     }),

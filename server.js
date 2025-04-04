@@ -41,11 +41,11 @@ app.use(require('morgan')('short'));
 })();
 
 // Serve static assets from 'public' folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // SPA Fallback - Serve 'index.html' for all other routes
 app.use('*', (req, res, next) => {
-  const indexPath = path.join(__dirname, 'public', 'index.html');
+  const indexPath = path.join(__dirname, 'dist', 'index.html');
   fs.access(indexPath, fs.constants.R_OK, (err) => {
     if (err) {
       res.status(404).send('File not found');
