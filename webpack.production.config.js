@@ -7,7 +7,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // Add this plugin
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack')
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 module.exports = {
   mode: 'production', // Set production mode for optimizations
@@ -83,10 +82,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html', // Use this as the template
       inject: 'body', // Automatically inject script tags at the bottom
-    }),
-    new LodashModuleReplacementPlugin({
-      collections: true,
-      paths: true,
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin({
