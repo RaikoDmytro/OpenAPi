@@ -49,6 +49,11 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
+        exclude: /node_modules\/swagger-ui-react/, // Skip `LodashModuleReplacementPlugin` optimizations for swagger-ui-react
+        use: 'babel-loader',
+      },
+      {
+        test: /\.js$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader', // Transpile modern JavaScript
@@ -80,10 +85,8 @@ module.exports = {
       inject: 'body', // Automatically inject script tags at the bottom
     }),
     new LodashModuleReplacementPlugin({
-      collections: true, // Enable lodash functions for collections (e.g., `map`, `filter`, etc.)
-      paths: true, // Enable path-based methods (e.g., `get`, `set`)
-      cloning: true, // Support cloning operations in lodash (deepClone, cloneDeep)
-      shorthands: true, // Enable shorthand methods
+      collections: true,
+      paths: true,
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin({
