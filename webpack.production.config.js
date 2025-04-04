@@ -79,7 +79,12 @@ module.exports = {
       template: './public/index.html', // Use this as the template
       inject: 'body', // Automatically inject script tags at the bottom
     }),
-    // new LodashModuleReplacementPlugin(),
+    new LodashModuleReplacementPlugin({
+      collections: true, // Enable lodash functions for collections (e.g., `map`, `filter`, etc.)
+      paths: true, // Enable path-based methods (e.g., `get`, `set`)
+      cloning: true, // Support cloning operations in lodash (deepClone, cloneDeep)
+      shorthands: true, // Enable shorthand methods
+    }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin({
       patterns: [
