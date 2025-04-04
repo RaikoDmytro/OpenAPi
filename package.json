@@ -118,7 +118,6 @@
     "jsdom": "^16.7.0",
     "jsdom-global": "^3.0.0",
     "lint-staged": "^10.2.11",
-    "lodash-webpack-plugin": "^0.11.6",
     "mini-css-extract-plugin": "2.7.6",
     "mocha": "*",
     "morgan": "^1.6.1",
