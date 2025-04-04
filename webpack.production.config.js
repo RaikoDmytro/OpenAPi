@@ -16,16 +16,16 @@ module.exports = {
 
   optimization: {
     minimize: true, // Enable minification
-    minimizer: [
-      new TerserWebpackPlugin({ // Minify JavaScript
-        terserOptions: {
-          compress: {
-            drop_console: true, // Strip console logs
-          },
-        },
-      }),
-      new CssMinimizerPlugin(), // Minify CSS
-    ],
+      minimizer: [
+          new TerserPlugin({
+              terserOptions: {
+                  compress: {
+                      drop_console: true,
+                  },
+              },
+          }),
+          new CssMinimizerPlugin({}),
+      ],
       splitChunks: {
           cacheGroups: {
               commons: {
